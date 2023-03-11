@@ -91,4 +91,6 @@ obj-$(CONFIG_INPUT_IDEAPAD_SLIDEBAR)	+= ideapad_slidebar.o
 obj-$(CONFIG_FPC_FPS_MMI)   		+= fpc_fps_mmi/
 obj-$(CONFIG_FINGERPRINT_GOODIX_FOD_MMI) += goodix_fod_mmi/
 obj-$(CONFIG_RBS_FPS_MMI)   		+= rbs_fps_mmi/
+obj-$(CONFIG_INPUT_EGISTEC_BIX)		+= ets_bix_mmi/
 obj-$(CONFIG_FINGERPRINT_EGISTEC_FPS_MMI) += ets_fps_mmi/
+obj-$(CONFIG_INPUT_CHIPONE_FPS_MMI) += chipone_fps_mmi/

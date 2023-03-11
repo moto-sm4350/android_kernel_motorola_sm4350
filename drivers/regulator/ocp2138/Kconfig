@@ -1,0 +1,12 @@
+config REGULATOR_OCP2138
+    tristate "WingTech OCP2138 Panel Power Supply Driver"
+    default n
+    help
+        Say Y here if you have OCP2138 Panel Power Supply Device support
+        in your system.
+
+        If unsure, say N.
+
+        To compile this driver as a module, choose M here: the
+        module will be called ocp2138.
+

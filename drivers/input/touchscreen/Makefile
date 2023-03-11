@@ -118,6 +118,7 @@ obj-$(CONFIG_TOUCHSCREEN_NT36XXX)	+= nt36xxx/
 obj-$(CONFIG_INPUT_TOUCHSCREEN_MMI)	+= touchscreen_mmi/
 obj-$(CONFIG_INPUT_TOUCHSCREEN_MMI_NVT)	+= touchscreen_mmi_nvt/
 obj-$(CONFIG_TOUCHSCREEN_FTS_TS)	+= stmicro_mmi/
+obj-$(CONFIG_INPUT_TOUCHSCREEN_FOCALTECH_0FLASH_V2_MMI) += focaltech_0flash_v2_mmi/
 obj-$(CONFIG_TOUCHSCREEN_GOODIX_BRL)	+= goodix_berlin_mmi/
 obj-$(CONFIG_TOUCHSCREEN_NT36xxx_HOSTDL_SPI_MMI)	+= nova_0flash_mmi/
 obj-$(CONFIG_TOUCHSCREEN_NT36xxx_HOSTDL_SPI_MMI_V1)	+= nova_0flash_mmi_v1/
