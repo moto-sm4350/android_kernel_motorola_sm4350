@@ -3328,7 +3328,8 @@ int adm_open_v2(int port_id, int path, int rate, int channel_mode, int topology,
 	    topology == VPM_TX_VOICE_FLUENCE_SM_COPP_TOPOLOGY ||
 	    topology == VPM_TX_VOICE_FLUENCE_NN_COPP_TOPOLOGY ||
 	    topology == VPM_TX_VOICE_FLUENCE_NN_COPP_TOPOLOGY_1 ||
-	    topology == AUDIO_RX_MONO_VOIP_COPP_TOPOLOGY)
+	    topology == AUDIO_RX_MONO_VOIP_COPP_TOPOLOGY ||
+	    topology == VOICE_TX_FNN_COPP_TOPOLOGY)
 		channel_mode = 1;
 
 	/*

@@ -49,7 +49,7 @@
  ******************************************************/
 #define AW882XX_I2C_NAME "aw882xx_smartpa"
 
-#define AW882XX_VERSION "v0.1.17"
+#define AW882XX_VERSION "v0.1.18"
 
 #define AW882XX_RATES SNDRV_PCM_RATE_8000_48000
 #define AW882XX_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | \

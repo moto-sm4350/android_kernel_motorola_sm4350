@@ -34,6 +34,16 @@
 void aw_cal_unmap_memory(void);
 #endif /* #ifdef CONFIG_SND_SOC_AWINIC_AW882XX */
 
+#ifdef CONFIG_SND_SOC_AW87XXX
+static int g_rx_port_id = 0;
+
+void aw_set_port_id(int rx_port_id)
+{
+       g_rx_port_id = rx_port_id;
+}
+EXPORT_SYMBOL(aw_set_port_id);
+#endif /* #ifdef CONFIG_SND_SOC_AW87XXX */
+
 #define WAKELOCK_TIMEOUT	5000
 #define AFE_CLK_TOKEN	1024
 #define AFE_NOWAIT_TOKEN	2048
@@ -610,6 +620,7 @@ int afe_get_topology(int port_id)
 done:
 	return topology;
 }
+EXPORT_SYMBOL(afe_get_topology);
 
 /**
  * afe_set_aanc_info -
@@ -1067,7 +1078,7 @@ static int32_t afe_callback(struct apr_client_data *data, void *priv)
 			}
 			atomic_set(&this_afe.aw_state, 0);
 			wake_up(&this_afe.wait[data->token]);
-		    return 0;
+		return 0;
 		}
 #endif /*CONFIG_SND_SOC_AWINIC_AW882XX*/
 		if (rtac_make_afe_callback(data->payload,
@@ -3914,11 +3925,19 @@ int aw_send_afe_tx_module_enable(uint32_t tx_port_id, void *buf, int cmd_size)
 }
 EXPORT_SYMBOL(aw_send_afe_tx_module_enable);
 
+#ifdef CONFIG_SND_SOC_AW87XXX
+int aw_send_afe_cal_apr(uint32_t param_id, void *buf, int cmd_size, bool write)     /*aw87xxx*/
+#else
 int aw_send_afe_cal_apr(uint32_t rx_port_id, uint32_t tx_port_id,
-						uint32_t param_id, void *buf, int cmd_size, bool write)
+						uint32_t param_id, void *buf, int cmd_size, bool write)   /*aw882xx*/
+#endif
 {
 	int32_t result = 0;
-	uint32_t port_id = rx_port_id;
+#ifdef CONFIG_SND_SOC_AW87XXX
+	uint32_t port_id = g_rx_port_id;
+#else
+	uint32_t port_id = rx_port_id;   /*aw882xx*/
+#endif
 	int32_t  module_id = AFE_MODULE_ID_AWDSP_RX;
 	uint32_t port_index = 0;
 	uint32_t payload_size = 0;
@@ -3929,14 +3948,20 @@ int aw_send_afe_cal_apr(uint32_t rx_port_id, uint32_t tx_port_id,
 
 	pr_debug("%s: enter\n", __func__);
 
+#ifndef CONFIG_SND_SOC_AW87XXX
 	if (param_id == AFE_PARAM_ID_AWDSP_TX_SET_ENABLE) {
 		port_id = tx_port_id;
 		module_id = AFE_MODULE_ID_AWDSP_TX;
 	}
+#endif
 
 	if (aw_cal->map_data.dma_buf == 0) {
-		/*Minimal chunk size is 4K*/
+		/*Minimal chunk size is 8K*/
+#ifdef CONFIG_AW882XX_MAPSIZE_16K
 		aw_cal->map_data.map_size = SZ_16K;
+#else
+		aw_cal->map_data.map_size = SZ_8K;
+#endif
 		result = msm_audio_ion_alloc(&(aw_cal->map_data.dma_buf),
 				aw_cal->map_data.map_size,
 				&(aw_cal->cal_data.paddr),&len,
@@ -3962,8 +3987,11 @@ int aw_send_afe_cal_apr(uint32_t rx_port_id, uint32_t tx_port_id,
 		pr_err("%s: Invalid AFE port = 0x%x\n", __func__, port_id);
 		goto err;
 	}
-
+#ifdef CONFIG_AW882XX_MAPSIZE_16K
 	if (cmd_size > (SZ_16K - sizeof(struct param_hdr_v3))) {
+#else
+	if (cmd_size > (SZ_8K - sizeof(struct param_hdr_v3))) {
+#endif
 		pr_err("%s: Invalid payload size = %d\n", __func__, cmd_size);
 		result = -EINVAL;
 		goto err;
@@ -11949,7 +11977,7 @@ static int afe_unmap_cal_data(int32_t cal_type,
 	ret = afe_cmd_memory_unmap(
 		cal_block->map_data.q6map_handle);
 	atomic_set(&this_afe.mem_map_cal_index, -1);
-#ifdef CONFIG_AW882XX_PARAMS_STORED_IN_BIN
+#if defined(CONFIG_AW882XX_PARAMS_STORED_IN_BIN) || defined(CONFIG_SND_SOC_AW87XXX)
 	atomic_set(&this_afe.mem_map_cal_handles[cal_index],0);
 #endif
 	if (ret < 0) {

@@ -712,10 +712,11 @@ void wcd_mbhc_report_plug(struct wcd_mbhc *mbhc, int insertion,
 			WCD_MBHC_REG_UPDATE_BITS(WCD_MBHC_FSM_EN,
 						 fsm_en);
 			pr_info("%s,compute impedance,zl = %d,zr = %d\n",
-						__func__, mbhc->zl, mbhc->zr);
-
-			if ((mbhc->zl > mbhc->mbhc_cfg->linein_th) &&
-				(mbhc->zr > mbhc->mbhc_cfg->linein_th) &&
+                                    __func__, mbhc->zl, mbhc->zr);
+			if ((((mbhc->zl > mbhc->mbhc_cfg->linein_th) &&
+				(mbhc->zr > mbhc->mbhc_cfg->linein_th)) ||
+				(mbhc->zl == 0) ||
+				(mbhc->zr == 0)) &&
 				(jack_type == SND_JACK_HEADPHONE)) {
 				jack_type = SND_JACK_LINEOUT;
 				mbhc->force_linein = true;
@@ -1282,8 +1283,8 @@ static irqreturn_t wcd_mbhc_release_handler(int irq, void *data)
 	if (mbhc->buttons_pressed & WCD_MBHC_JACK_BUTTON_MASK) {
 		ret = wcd_cancel_btn_work(mbhc);
 		if (ret == 0) {
-			pr_info("%s: Reporting long button release event 0x%x\n",
-				 __func__, mbhc->buttons_pressed);
+			pr_info("%s: Reporting long button release event\n",
+				 __func__);
 			wcd_mbhc_jack_report(mbhc, &mbhc->button_jack,
 					0, mbhc->buttons_pressed);
 		} else {
@@ -1291,8 +1292,8 @@ static irqreturn_t wcd_mbhc_release_handler(int irq, void *data)
 				pr_debug("%s: Switch irq kicked in, ignore\n",
 					__func__);
 			} else {
-				pr_info("%s: Reporting btn press 0x%x\n",
-					 __func__, mbhc->buttons_pressed);
+				pr_info("%s: Reporting btn press\n",
+					 __func__);
 				wcd_mbhc_jack_report(mbhc,
 						     &mbhc->button_jack,
 						     mbhc->buttons_pressed,

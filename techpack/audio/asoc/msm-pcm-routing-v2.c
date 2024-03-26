@@ -33165,6 +33165,11 @@ static const struct soc_enum sen_mi2s_rx_vi_fb_mux_enum =
 	ARRAY_SIZE(mi2s_rx_vi_fb_tx_mux_text),
 	mi2s_rx_vi_fb_tx_mux_text, mi2s_rx_vi_fb_tx_value);
 
+static const struct soc_enum sec_mi2s_rx_vi_fb_mux_enum =
+	SOC_VALUE_ENUM_DOUBLE(0, MSM_BACKEND_DAI_SEC_I2S_RX, 0, 0,
+	ARRAY_SIZE(sec_mi2s_rx_vi_fb_tx_mux_text),
+	sec_mi2s_rx_vi_fb_tx_mux_text, sec_mi2s_rx_vi_fb_tx_value);
+
 static const struct soc_enum int4_mi2s_rx_vi_fb_mono_ch_mux_enum =
 	SOC_VALUE_ENUM_DOUBLE(0, MSM_BACKEND_DAI_INT4_MI2S_RX, 0, 0,
 	ARRAY_SIZE(int4_mi2s_rx_vi_fb_tx_mono_mux_text),

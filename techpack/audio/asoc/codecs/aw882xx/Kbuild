@@ -5,5 +5,10 @@ EXTRA_CFLAGS += -I$(TOP)/kernel/motorola/sm7325/techpack/audio/include/uapi/
 
 EXTRA_CFLAGS += -DCONFIG_AW882XX_CODEC -DCONFIG_AW882XX_DSP
 
+ifeq ($(CONFIG_ARCH_YUPIK), y)
 aw882xx_k504-objs = aw882xx.o
 obj-m += aw882xx_k504.o
+else
+aw882xx_k419-objs = aw882xx.o
+obj-m += aw882xx_k419.o
+endif
